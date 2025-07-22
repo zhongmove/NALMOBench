@@ -1,0 +1,15 @@
+Database : berlintest
+Restore  : NO
+
+Operator : NL4ST
+Number   : 1
+Signature: string -> string
+Example  : query NL4ST("Find the five closest kinos to the BGrenzenLine.");
+Result   : query Kinos creatertree[GeoData] Kinos distancescan2 [BGrenzenLine, 5] consume;
+
+Operator : NL4ST
+Number   : 2
+Signature: string -> line
+Example  : query NL4ST("Did the train 31 pass Alexanderplatz between 6am and 7am?");
+Result   : query Trains feed filter [.Id=31] filter[.Trip present [const periods value (("2020-11-20-6:00" "2020-11-20-7:00" TRUE TRUE))]] extend[Stretch: trajectory(.Trip atperiods [const periods value (("2020-11-20-6:00" "2020-11-20-7:00" TRUE TRUE))])]  filter[.Trip passes alexanderplatz] extend[Times: deftime(.Trip  at alexanderplatz)] project[Stretch] consume;
+
